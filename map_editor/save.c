@@ -6,7 +6,7 @@
 /*   By: twitting <twitting@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/22 21:38:17 by twitting          #+#    #+#             */
-/*   Updated: 2019/04/03 19:27:47 by twitting         ###   ########.fr       */
+/*   Updated: 2019/04/07 16:39:23 by twitting         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void	putsectstofile(t_edit *edit, int fd)
 		ft_putchar_fd('\t', fd);
 		ft_putnbr_fd(edit->sectors[i].light, fd);
 		ft_putchar_fd(' ', fd);
+		ft_putnbr_fd(edit->sectors[i].texture, fd);
+		ft_putchar_fd('\t', fd);
 		while (++j < (int)edit->sectors[i].npoints)
 		{
 			ft_putnbr_fd(edit->sectors[i].vertex[j], fd);
@@ -73,6 +75,27 @@ void	putplayertofile(t_edit *edit, int fd)
 	ft_putnbr_fd(edit->playerangle, fd);
 	ft_putchar_fd(' ', fd);
 	ft_putnbr_fd(edit->playersect, fd);
+	ft_putchar_fd('\n', fd);
+	ft_putchar_fd('\n', fd);
+}
+
+void	putspritestofile(t_edit *edit, int fd)
+{
+	int	i;
+
+	i = -1;
+	while (++i < edit->sprnum)
+	{
+		ft_putstr_fd("object\t", fd);
+		ft_putnbr_fd(edit->sprites[i].x, fd);
+		ft_putchar_fd(' ', fd);
+		ft_putnbr_fd(edit->sprites[i].y, fd);
+		ft_putchar_fd('\t', fd);
+		ft_putnbr_fd(edit->sprites[i].type, fd);
+		ft_putchar_fd(' ', fd);
+		ft_putnbr_fd(edit->sprites[i].sector, fd);
+		ft_putchar_fd('\n', fd);
+	}
 }
 
 void	savemap(t_edit *edit)
@@ -85,4 +108,5 @@ void	savemap(t_edit *edit)
 	putvertstofile(edit, fd);
 	putsectstofile(edit, fd);
 	putplayertofile(edit, fd);
+	putspritestofile(edit, fd);
 }

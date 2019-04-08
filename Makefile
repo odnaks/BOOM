@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ebednar <ebednar@student.42.fr>            +#+  +:+       +#+         #
+#    By: drestles <drestles@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 14:23:06 by twitting          #+#    #+#              #
-#    Updated: 2019/04/03 19:36:07 by ebednar          ###   ########.fr        #
+#    Updated: 2019/04/08 06:00:35 by drestles         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = doom-nukem
 SRC = ./src/main.c \
-		./src/map_test.c \
+		./src/parser.c \
 		./src/vector_funcs.c \
 		./src/engine.c \
 		./src/init.c \
@@ -20,12 +20,25 @@ SRC = ./src/main.c \
 		./src/movement.c \
 		./src/textures.c \
 		./src/scaler.c \
-		./src/sprites.c
+		./src/sprites.c \
+		./src/buttons.c \
+		./src/transparent.c \
+		./src/menu/main.c \
+		./src/menu/menu.c \
+		./src/menu/handle_pause.c \
+		./src/menu/handle_menu.c \
+		./src/menu/handle_load.c \
+		./src/menu/handle_save.c \
+		./src/menu/handle_game_mode.c \
+
+		
 LIBFT = ./libft/libft.a
 OBJECTS = $(SRC:.c=.o)
 WWW = -Wall -Wextra -Werror -Ofast
-INCLUDES = -I libft -I includes/ -I includes/frameworks/SDL2.framework/Versions/A/Headers -I includes/frameworks/SDL2_image.framework/Versions/A/Headers
-SDL =  -framework SDL2 -F includes/frameworks/ -framework SDL2_image -F includes/frameworks/ 
+INCLUDES = -I libft -I includes/ -I includes/frameworks/SDL2.framework/Versions/A/Headers \
+-I includes/frameworks/SDL2_image.framework/Versions/A/Headers \
+-I includes/frameworks/SDL2_ttf.framework/Versions/A/Headers
+SDL =  -framework SDL2 -F includes/frameworks/ -framework SDL2_image -F includes/frameworks/ -framework SDL2_ttf
 FLAGS_LINUX = -I ./includes/ -I includes/frameworks/SDL2.framework/Versions/A/Headers -I \
 	includes/frameworks/SDL2_image.framework/Versions/A/Headers -lm -lpthread -lSDL2main -lSDL2 -I libft -lSDL2_image
 
@@ -33,6 +46,7 @@ all: $(NAME)
 
 linux:
 	make re -C libft/
+	make re -C kiss_sdl/
 	make re -C map_editor/
 	sudo gcc $(WWW) $(SRC) $(LIBFT) $(FLAGS_LINUX) -o $(NAME)
 

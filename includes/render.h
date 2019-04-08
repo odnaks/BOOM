@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebednar <ebednar@student.42.fr>            +#+  +:+       +#+        */
+/*   By: twitting <twitting@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/06 14:42:12 by ebednar           #+#    #+#             */
-/*   Updated: 2019/04/04 19:15:05 by ebednar          ###   ########.fr       */
+/*   Updated: 2019/04/07 19:12:22 by twitting         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 					X = rtx + env->player.where.x; Z = rtz + env->player.where.y; \
 					} while(0)
 # define MAXQUEUE 32
+# define BUTTONHEIGHT 4
+# define BUTTONWIDTH 2
 
 # include "engine.h"
 
@@ -35,6 +37,17 @@ typedef struct	s_now
 	int			sx1;
 	int			sx2;
 }				t_now;
+
+typedef	struct	s_sprque
+{
+	int			sector;
+	int			sx1;
+	int			sx2;
+	int			ytop[WWIN - 1];
+	int			ybottom[WWIN - 1];
+	char		visible;
+}				t_sprque;
+
 
 typedef struct s_scaler
 {
@@ -49,8 +62,7 @@ typedef struct s_scaler
 typedef struct	s_rend
 {
 			t_now		queue[MAXQUEUE];
-			t_now		sprq[MAXQUEUE];
-			int			sectcount;
+			t_sprque	sprq[MAXQUEUE];
 			t_sector	*nowsect;
 			double		vx1;
 			double		vy1;
@@ -125,9 +137,62 @@ typedef struct	s_rend
 			int			sprendx;
 			double		tspr1;
 			double		tspr2;
+			t_xy		vbut1;
+			t_xy		vbut2;
+			t_xy		tbut1;
+			t_xy		tbut2;
+			double		butxscale1;
+			double		butyscale1;
+			double		butxscale2;
+			double		butyscale2;
+			int			butx1;
+			int			butx2;
+			int			butx;
+			double		butceil;
+			double		butfloor;
+			int			buty1a;
+			int			buty1b;
+			int			buty2a;
+			int			buty2b;
+			int			cbutya;
+			int			cbutyb;
+			int			butbegx;
+			int			butendx;
+			t_scaler	butya_int;
+			t_scaler	butyb_int;
+			int			butya;
+			int			butyb;
+			t_xy		vtr1;
+			t_xy		vtr2;
+			t_xy		ttr1;
+			t_xy		ttr2;
+			double		trxscale1;
+			double		tryscale1;
+			double		trxscale2;
+			double		tryscale2;
+			int			trx1;
+			int			trx2;
+			int			trx;
+			double		trceil;
+			double		trfloor;
+			int			try1a;
+			int			try1b;
+			int			try2a;
+			int			try2b;
+			int			ctrya;
+			int			ctryb;
+			int			trbegx;
+			int			trendx;
+			t_scaler	trya_int;
+			t_scaler	tryb_int;
+			int			trya;
+			int			tryb;
 }				t_rend;
 
+void	drawsky(t_env *env, t_rend *rend, int sect);
 int		scaler_next(t_scaler *sc);
 void	rendersprite(t_env *env, t_rend *rend);
+void	renderbutton(t_env *env, t_rend *rend);
+void	trplane(t_env *env, t_rend *rend, int j);
 
 #endif
