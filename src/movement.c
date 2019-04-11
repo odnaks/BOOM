@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   movement.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebednar <ebednar@student.42.fr>            +#+  +:+       +#+        */
+/*   By: daharwoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/08 15:10:46 by ebednar           #+#    #+#             */
-/*   Updated: 2019/04/06 21:28:42 by ebednar          ###   ########.fr       */
+/*   Updated: 2019/04/11 19:58:46 by daharwoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,41 @@ void	v_collision(t_env *env)
 		v_collision_support(env);
 }
 
+void	h_collision_support(t_env *env, double *arr, t_xy *b_pd, t_xy *d, int s)
+{
+	arr[1] = env->sector[env->player.sector].neighbors[s] < 0 ? 9e9 : MAX(env->sector[env->player.sector].floor, env->sector[env->sector[env->player.sector].neighbors[s]].floor);
+	arr[2] = env->sector[env->player.sector].neighbors[s] < 0 ? 9e9 : MIN(env->sector[env->player.sector].ceiling, env->sector[env->sector[env->player.sector].neighbors[s]].ceiling);
+	if (arr[2] < env->player.where.z + HEADMARGIN || arr[1] > env->player.where.z - (env->ducking ? DUCKHEIGHT : EYEHEIGHT) + KNEEHEIGHT)
+	{
+		b_pd[0].x = env->sector[env->player.sector].vertex[(s + 1) % env->sector[env->player.sector].npoints].x - env->sector[env->player.sector].vertex[s % env->sector[env->player.sector].npoints].x;
+		b_pd[0].y = env->sector[env->player.sector].vertex[(s + 1) % env->sector[env->player.sector].npoints].y - env->sector[env->player.sector].vertex[s % env->sector[env->player.sector].npoints].y;
+		arr[0] = d->x;
+		d->x = b_pd[0].x * (d->x * b_pd[0].x + b_pd[0].y * d->y) / (b_pd[0].x * b_pd[0].x + b_pd[0].y * b_pd[0].y);
+		d->y = b_pd[0].y * (arr[0] * b_pd[0].x + b_pd[0].y * d->y) / (b_pd[0].x * b_pd[0].x + b_pd[0].y * b_pd[0].y);
+		env->moving = -1;
+	}
+}
+
 void	h_collision(t_env *env, t_xy *p, t_xy *d, t_xy *dd)
 {
 	int			s;
-	double		arr[3]; //temp low hight
+	double		arr[3];
 	t_xy		b_pd[2];
 
 	b_pd[1].x = p->x + dd->x;
 	b_pd[1].y = p->y + dd->y;
+	s = -1;
+	while (++s < env->sprcount)
+		if (env->sprite[s].type == 2)
+			if (intersect_box(*p, b_pd[1], env->sprite[s].pos1, env->sprite[s].pos2) && point_side(b_pd[1].x, b_pd[1].y, env->sprite[s].pos1, env->sprite[s].pos2) < 0)
+			{
+				b_pd[0].x = env->sprite[s].pos2.x - env->sprite[s].pos1.x;
+				b_pd[0].y = env->sprite[s].pos2.y - env->sprite[s].pos1.y;
+				arr[0] = d->x;
+				d->x = b_pd[0].x * (d->x * b_pd[0].x + b_pd[0].y * d->y) / (b_pd[0].x * b_pd[0].x + b_pd[0].y * b_pd[0].y);
+				d->y = b_pd[0].y * (arr[0] * b_pd[0].x + b_pd[0].y * d->y) / (b_pd[0].x * b_pd[0].x + b_pd[0].y * b_pd[0].y);
+				env->moving = -1;
+			}
 	s = -1;
 	while (++s < (int)env->sector[env->player.sector].npoints)
 		if (intersect_box(*p, b_pd[1], env->sector[env->player.sector].vertex[s % env->sector[env->player.sector].npoints], env->sector[env->player.sector].vertex[(s + 1) % env->sector[env->player.sector].npoints]) && point_side(b_pd[1].x, b_pd[1].y, env->sector[env->player.sector].vertex[s % env->sector[env->player.sector].npoints], env->sector[env->player.sector].vertex[(s + 1) % env->sector[env->player.sector].npoints]) < 0)
@@ -63,14 +90,7 @@ void	h_collision(t_env *env, t_xy *p, t_xy *d, t_xy *dd)
 			arr[1] = env->sector[env->player.sector].neighbors[s] < 0 ? 9e9 : MAX(env->sector[env->player.sector].floor, env->sector[env->sector[env->player.sector].neighbors[s]].floor);
 			arr[2] = env->sector[env->player.sector].neighbors[s] < 0 ? 9e9 : MIN(env->sector[env->player.sector].ceiling, env->sector[env->sector[env->player.sector].neighbors[s]].ceiling);
 			if (arr[2] < env->player.where.z + HEADMARGIN || arr[1] > env->player.where.z - (env->ducking ? DUCKHEIGHT : EYEHEIGHT) + KNEEHEIGHT)
-			{
-				b_pd[0].x = env->sector[env->player.sector].vertex[(s + 1) % env->sector[env->player.sector].npoints].x - env->sector[env->player.sector].vertex[s % env->sector[env->player.sector].npoints].x;
-				b_pd[0].y = env->sector[env->player.sector].vertex[(s + 1) % env->sector[env->player.sector].npoints].y - env->sector[env->player.sector].vertex[s % env->sector[env->player.sector].npoints].y;
-				arr[0] = d->x;
-				d->x = b_pd[0].x * (d->x * b_pd[0].x + b_pd[0].y * d->y) / (b_pd[0].x * b_pd[0].x + b_pd[0].y * b_pd[0].y);
-				d->y = b_pd[0].y * (arr[0] * b_pd[0].x + b_pd[0].y * d->y) / (b_pd[0].x * b_pd[0].x + b_pd[0].y * b_pd[0].y);
-				env->moving = -1;
-			}
+				h_collision_support(env, arr, b_pd, d, s);
 		}
 	env->falling = 1;
 }
@@ -80,7 +100,7 @@ int		can_i_go(t_env *env, t_xy *p, double x, double y)
 	double			hh[env->sector[env->player.sector].npoints];
 	unsigned int	i;
 	unsigned int	ii1;
-	double			arr[6];// 0x 1y 2a 3b 4c 5s
+	double			arr[6];
 
 	i = 0;
 	ii1 = (i + 1) % env->sector[env->player.sector].npoints;
@@ -93,8 +113,8 @@ int		can_i_go(t_env *env, t_xy *p, double x, double y)
 		arr[4] = sqrt(pow(p[i].x - p[ii1].x, 2) + pow(p[i].y - p[ii1].y, 2));
 		arr[5] = 0.25 * sqrt(pow(pow(arr[2], 2) + pow(arr[3], 2) + pow(arr[4], 2), 2) - 2 * (pow(arr[2], 4) + pow(arr[3], 4) + pow(arr[4], 4)));
 		hh[i] = (2 * arr[5]) / arr[4];
-		//if (arr[2] < 0.7 || arr[3] < 0.7)    //не работают косые порталы
-		//	return (0);// нет зависимости от высоты
+		if (arr[2] < 1 || arr[3] < 1)
+			return (0);
 		i++;
 	}
 	return (1);
@@ -102,6 +122,19 @@ int		can_i_go(t_env *env, t_xy *p, double x, double y)
 
 void	movement_support(t_env *env, float dx, float dy)
 {
+	int i;
+
+	i = 0;
+	while (i < env->sprcount)
+	{
+		if (env->sprite[i].spritedist < 3 && env->sprite[i].type != 2 && env->sprite[i].type != 3)
+		{
+			env->player.where.x -= dy;
+			env->player.where.y -= dx;
+			return ;
+		}
+		i++;
+	}
 	env->player.where.x += dx;
 	env->player.where.y += dy;
 }
@@ -109,9 +142,9 @@ void	movement_support(t_env *env, float dx, float dy)
 void	movement(t_env *env, float dx, float dy)
 {
 	t_sector		sect;
-	int				arr2[2];//s i
+	int				arr2[2];
 	t_xy			points[env->sector[env->player.sector].npoints];
-	t_xy			arr[2];//p dp
+	t_xy			arr[2];
 
 	arr[0].x = env->player.where.x;
 	arr[0].y = env->player.where.y;
@@ -198,8 +231,8 @@ void	wsad_read(t_env *env)
 	dmv = wsad_read_support2(env, dmv);
 	env->player.velocity.x = mv.x * 60.0 / (double)env->oldfps;
 	env->player.velocity.y = mv.y * 60.0 / (double)env->oldfps;
-	env->player.dvelocity.x = dmv.x * 60.0 / (double)env->oldfps;
-	env->player.dvelocity.y = dmv.y * 60.0 / (double)env->oldfps;
+	env->player.dvelocity.x = dmv.x / fabs(dmv.x) * 1.5 * 60.0 / (double)env->oldfps;
+	env->player.dvelocity.y = dmv.y / fabs(dmv.y) * 1.5 * 60.0 / (double)env->oldfps;
 	env->moving = (mv.x != 0 || mv.y != 0 || env->falling) ? 1 : 0;
 }
 

@@ -2,13 +2,7 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: drestles <drestles@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/03/05 15:25:09 by twitting          #+#    #+#             */
-/*   Updated: 2019/04/08 01:16:41 by drestles         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
 
 #include "engine.h"
 
@@ -59,8 +53,8 @@ void	verttosect(t_env *env, t_sector *sect, char *line, int i)
 
 void	parseplayer(t_env *env, int fd)
 {
-	int	i;
-	char *line;
+	int		i;
+	char	*line;
 
 	get_next_line(fd, &line);
 	i = 0;
@@ -76,15 +70,14 @@ void	parseplayer(t_env *env, int fd)
 	while (line[i] != ' ')
 		i++;
 	env->player.sector = ft_atoi(&line[i]);
-	ft_putnbr(env->player.sector);
 	env->player.velocity.x = 0.0;
 	env->player.velocity.y = 0.0;
 	env->player.velocity.z = 0.0;
 	env->player.yaw = 0.0;
 	env->player.where.z = env->sector[env->player.sector].floor + EYEHEIGHT;
 	free(line);
-	get_next_line(fd, &line);
-	free(line);
+	if (get_next_line(fd, &line))
+		free(line);
 }
 
 void	parsesectors(t_env *env, int fd)
@@ -158,6 +151,18 @@ void	parsevertexes(t_env *env, int fd)
 	}
 }
 
+void	getvertsectnums_support(t_env *env, char *line)
+{
+	if (line[0] == 'v')
+		env->nvertexes++;
+	else if (line[0] == 's')
+		env->nsectors++;
+	else if (line[0] == 'o')
+		env->sprcount++;
+	else if (line[0] == 'w')
+		env->sprcount += 2;
+}
+
 void	getvertsectnums(t_env *env)
 {
 	int		fd;
@@ -170,14 +175,7 @@ void	getvertsectnums(t_env *env)
 		ft_putstr("openerr\n");
 	while (get_next_line(fd, &line) > 0)
 	{
-		if (line[0] == 'v')
-			env->nvertexes++;
-		else if (line[0] == 's')
-			env->nsectors++;
-		else if (line[0] == 'o')
-			env->sprcount++;
-		else if (line[0] == 'w')
-			env->sprcount += 2;
+		getvertsectnums_support(env, line);
 		free(line);
 	}
 	close(fd);
@@ -224,28 +222,6 @@ int	parsesprites(t_env *env, int fd)
 	return (count);
 }
 
-void	spritelightapply(t_env *env, t_sprite *sprite)
-{
-	int j;
-	int k;
-	unsigned char *pix;
-	
-	sprite->texture = sprite->type == 0 ? IMG_Load("textures/barrel.png") : IMG_Load("textures/enemy.png");
-	pix = (unsigned char *)sprite->texture->pixels;
-	j = -1;
-	while (++j < sprite->texture->h)
-	{
-		k = -1;
-		while (++k < sprite->texture->w - 1)
-		{
-			pix[(j * sprite->texture->w + k) * 4] = (unsigned char)((double)pix[(j * sprite->texture->w + k) * 4] / 100 * env->sector[sprite->sector].light);
-			pix[(j * sprite->texture->w + k) * 4 + 1] = (unsigned char)((double)pix[(j * sprite->texture->w + k) * 4 + 1] / 100 * env->sector[sprite->sector].light);
-			pix[(j * sprite->texture->w + k) * 4 + 2] = (unsigned char)((double)pix[(j * sprite->texture->w + k) * 4 + 2] / 100 * env->sector[sprite->sector].light);
-		}
-	}
-	env->fps++;
-}
-
 void	spritemaker(t_env *env)
 {
 	int	i;
@@ -253,15 +229,15 @@ void	spritemaker(t_env *env)
 	i = -1;
 	while (++i < env->sprcount)
 	{
-		if (env->sprite[i].type == 0)
+		if (env->sprite[i].type == 0 || env->sprite[i].type == 3)
 		{
-			env->sprite[i].height = 12;
-			env->sprite[i].width = 4;
+			env->sprite[i].height = 7;
+			env->sprite[i].width = 3;
 		}
 		else if (env->sprite[i].type == 1)
 		{
-			env->sprite[i].height = 20;
-			env->sprite[i].width = 7;
+			env->sprite[i].height = 12;
+			env->sprite[i].width = 4;
 		}
 	}
 }
@@ -278,15 +254,14 @@ void	makewallsp(t_env *env, int i)
 	env->sprite[i + 1].pos2.y = env->vertex[env->wallsp.vert1].y;
 	env->sprite[i].sector = env->wallsp.sect2;
 	env->sprite[i + 1].sector = env->wallsp.sect1;
-
 	env->sprite[i].height = MIN(env->sector[env->wallsp.sect1].ceiling, env->sector[env->wallsp.sect2].ceiling);
 	env->sprite[i].floor = MAX(env->sector[env->wallsp.sect1].floor, env->sector[env->wallsp.sect2].floor);
 	env->sprite[i].type = 2;
-	env->sprite[i].texture = IMG_Load("textures/bars.png");
+	env->sprite[i].texture[0] = IMG_Load("textures/bars.png");
 	env->sprite[i + 1].height = MIN(env->sector[env->wallsp.sect1].ceiling, env->sector[env->wallsp.sect2].ceiling);
 	env->sprite[i + 1].floor = MAX(env->sector[env->wallsp.sect1].floor, env->sector[env->wallsp.sect2].floor);
 	env->sprite[i + 1].type = 2;
-	env->sprite[i + 1].texture = IMG_Load("textures/bars.png");
+	env->sprite[i + 1].texture[0] = IMG_Load("textures/bars.png");
 }
 
 void	parsewallsps(t_env *env, int fd, int count)
@@ -312,7 +287,6 @@ void	parsewallsps(t_env *env, int fd, int count)
 			env->wallsp.sect2 = ft_atoi(&line[i]);
 			makewallsp(env, count);
 			count += 2;
-			//printf("%d %d %d %d %d %d\n", env->wallsp.vert1, env->wallsp.vert2, env->wallsp.sect1, env->wallsp.sect2, count, env->sprcount);
 		}
 		else if (line[0] != 'w')
 		{
@@ -323,7 +297,6 @@ void	parsewallsps(t_env *env, int fd, int count)
 	}
 }
 
-
 void	grandparser(t_env *env)
 {
 	int	fd;
@@ -331,7 +304,7 @@ void	grandparser(t_env *env)
 
 	if ((fd = open(env->mapname, O_RDONLY)) < 0)
 		ft_putstr("openerr\n");
-	
+
 	getvertsectnums(env);
 	parsevertexes(env, fd);
 	parsesectors(env, fd);

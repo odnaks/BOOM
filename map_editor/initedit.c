@@ -6,7 +6,7 @@
 /*   By: twitting <twitting@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 18:26:05 by twitting          #+#    #+#             */
-/*   Updated: 2019/04/06 17:02:24 by twitting         ###   ########.fr       */
+/*   Updated: 2019/04/11 19:54:22 by twitting         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	makegrid(t_edit *edit)
 	}
 }
 
-void	sectvertinit(t_edit *edit) //if segfault on macos see there
+void	sectvertinit(t_edit *edit)
 {
 	int	i;
 	int	j;
@@ -68,29 +68,36 @@ void	sectvertinit(t_edit *edit) //if segfault on macos see there
 	}
 }
 
+void	extrainit(t_edit *edit)
+{
+	edit->quit = 0;
+	edit->put = 0;
+	edit->barsflag = 0;
+	edit->playersetflag = 0;
+	edit->glvertnum = 0;
+	edit->nowln.color = 0xffffff;
+	edit->barsnum = 0;
+	edit->sectnum = 0;
+	edit->vertnum = 0;
+	edit->sprnum = 0;
+	edit->buttonflag = 0;
+}
+
 t_edit	*init(void)
 {
 	t_edit	*edit;
 
 	edit = (t_edit *)malloc(sizeof(t_edit));
-	edit->quit = 0;
-	edit->put = 0;
-	edit->playersetflag = 0;
-	edit->glvertnum = 0;
-	edit->nowln.color = 0xffffff;
-	edit->sectnum = 0;
-	edit->vertnum = 0;
-	edit->sprnum = 0;
-	edit->buttonflag = 0;
+	extrainit(edit);
 	sectvertinit(edit);
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		ft_putchar('!');
+		ft_error(4);
 	else
 	{
 		if (!(edit->window = SDL_CreateWindow("Super Map Editor 2020",
 				SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 				WWIN, HWIN, SDL_WINDOW_OPENGL + SDL_WINDOW_ALLOW_HIGHDPI)))
-			ft_putchar('!');
+			ft_error(4);
 		edit->surface = SDL_GetWindowSurface(edit->window);
 	}
 	makegrid(edit);

@@ -6,37 +6,40 @@
 /*   By: drestles <drestles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 06:00:22 by drestles          #+#    #+#             */
-/*   Updated: 2019/04/08 06:04:36 by drestles         ###   ########.fr       */
+/*   Updated: 2019/04/10 23:02:32 by drestles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "engine.h"
+#include "render.h"
 
 /*
 ** STATE 0
 */
 void menu(t_env *env, SDL_Event *e)
 {
+	SDL_Surface *button;
 	env->b_one = 0;
+	env->b_three = 0;
 	env->b_four = 0;
+	button = SDL_LoadBMP("img/menu.bmp");
+	SDL_BlitScaled(button, NULL, env->surface, NULL);
+	SDL_FreeSurface(button);
+	SDL_UpdateWindowSurface(env->window);
 	while (env->state == 0)
 	{
-		SDL_Rect rect;
-		rect.x = 320;
-		rect.y = 200;
-		rect.h = 100;
-		rect.w = 400;
-		SDL_Surface *button;
-		button = SDL_LoadBMP("img/menu.bmp");
-		if (env->b_one == 1)
-			button = SDL_LoadBMP("img/menu_1.bmp");
-		if (env->b_three == 1)
-			button = SDL_LoadBMP("img/menu_2.bmp"); 
-		if (env->b_four == 1)
-			button = SDL_LoadBMP("img/menu_3.bmp");
-		SDL_BlitScaled(button, NULL, env->surface, NULL);
-		SDL_FreeSurface(button);
-		SDL_UpdateWindowSurface(env->window);
+		if (env->b_one == 1 | env->b_three == 1 | env->b_four == 1)
+		{
+			if (env->b_one == 1)
+				button = SDL_LoadBMP("img/menu_1.bmp");
+			else if (env->b_three == 1)
+				button = SDL_LoadBMP("img/menu_2.bmp"); 
+			else if (env->b_four == 1)
+				button = SDL_LoadBMP("img/menu_3.bmp");
+			SDL_BlitScaled(button, NULL, env->surface, NULL);
+			SDL_FreeSurface(button);
+			SDL_UpdateWindowSurface(env->window);
+		}
 		handle_events_menu(env, e);
 	}
 }
@@ -47,15 +50,16 @@ void menu(t_env *env, SDL_Event *e)
 ** STATE 3 SAVE
 ** STATE 4 LOAD
 ** STATE 5 GAME MODE
+** STATE 6 GAME OVER
 */
-void start(t_env *env, SDL_Event *e)
+void start(t_env *env, SDL_Event *e, t_rend *rend)
 {
 	if (env->state == 0)
 		menu(env, e);
 	else if (env->state == 1)
 	{
 		env->frame = clock();
-		start_engine(env, e);
+		start_engine(env, e, rend);
 		fps(env);
 	}
 	else if (env->state == 2)
@@ -66,4 +70,6 @@ void start(t_env *env, SDL_Event *e)
 		load_game(env, e);
 	else if (env->state == 5)
 		game_mode(env, e);
+	else if (env->state == 6) /////////// <<<<================
+		game_over(env, e);
 }

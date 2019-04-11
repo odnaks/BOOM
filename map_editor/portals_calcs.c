@@ -6,7 +6,7 @@
 /*   By: twitting <twitting@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/22 21:41:55 by twitting          #+#    #+#             */
-/*   Updated: 2019/04/07 16:40:15 by twitting         ###   ########.fr       */
+/*   Updated: 2019/04/11 21:14:30 by twitting         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,11 @@ int		checknearverts2(t_edit *edit, int first)
 	return (-1);
 }
 
-int		makeneighbors(t_edit *edit, int sect1, int sect2)
+int		makeneighbors(t_edit *edit, int sect1, int sect2, int i)
 {
-	int	i;
-
 	i = -1;
-	if (PSECT1.floor > abs(PSECT2.ceiling) || PSECT2.floor > abs(PSECT1.ceiling))
+	if (PSECT1.floor > abs(PSECT2.ceiling) ||
+		PSECT2.floor > abs(PSECT1.ceiling))
 		return (0);
 	while (++i < (int)PSECT1.npoints)
 	{
@@ -79,9 +78,10 @@ int		makeneighbors(t_edit *edit, int sect1, int sect2)
 			PSECT2.vertex[(i + 1) % PSECT2.npoints] == PVERT2))
 			PSECT2.neighbors[i] = sect1;
 	}
-	printf("PORTAL: Sect1:%d, Sect2:%d, vert1:%d, vert2:%d\n",
-		sect1, sect2, PVERT1, PVERT2);
-	putportalline(edit, 0xff3333);
+	if (edit->barsflag)
+		makebars(edit, sect1, sect2);
+	else
+		putportalline(edit, 0xff3333);
 	return (1);
 }
 
@@ -90,8 +90,10 @@ int		checknearverts(t_edit *edit)
 	int	i;
 	int	j;
 	int	check2;
+	int k;
 
 	i = -1;
+	k = 5;
 	while (++i < 64 && edit->portsects[i] != -1)
 	{
 		j = -1;
@@ -102,11 +104,9 @@ int		checknearverts(t_edit *edit)
 			PVERT2) || (j == 0 && PSECT.vertex[PSECT.npoints - 1] == PVERT2)))
 			{
 				if ((check2 = checknearverts2(edit, i)) != -1)
-				{
 					if (makeneighbors(edit, edit->portsects[i],
-						edit->portsects[check2]))
+						edit->portsects[check2], k))
 						return (1);
-				}
 			}
 		}
 	}
