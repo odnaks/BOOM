@@ -6,8 +6,8 @@
 a subjective view within your universe. Without hardware acceleration and 3D library,
 must use the Ray-Casting method for this.
 
-- [How to install](#id-section1)
-- [and start](#id-section2)
+- [How to install ](#id-section1)
+ [ and start](#id-section2)
 - [Map editor](#id-section3)
 
 ### Process of playing the game:
@@ -40,5 +40,5 @@ or
 ![head3](https://github.com/odnaks/-/blob/master/BOOM/head_3.gif)
 
 ## Map editor: <div id='id-section3'/>
-![edit](https://github.com/odnaks/-/blob/master/BOOM/ru.png) 
 ![edit](https://github.com/odnaks/-/blob/master/BOOM/edit.gif)
+![edit](https://github.com/odnaks/-/blob/master/BOOM/ru.png) 
