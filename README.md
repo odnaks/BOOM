@@ -1,5 +1,9 @@
 # BOOM
 
+#### "Realistic" 3D graphic representation that have from
+#### a subjective view within your universe. Without hardware acceleration and 3D library,
+####  must use the Ray-Casting method for this.
+
 ### Process of playing the game:
 ![game0](https://github.com/odnaks/-/blob/master/BOOM/game0.gif)
 
