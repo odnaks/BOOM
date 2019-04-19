@@ -52,4 +52,10 @@ ESC - menu
 ## Map editor: <div id='id-section4'/>
 #### You must be create your own map
 ![edit](https://github.com/odnaks/-/blob/master/BOOM/edit.gif)
-![edit](https://github.com/odnaks/-/blob/master/BOOM/ru.png) 
+![edit](https://github.com/odnaks/-/blob/master/BOOM/ru.png)
+
+## Authors:
+##### ME
+##### [Вася](https://github.com/Twitting)
+##### [Карим](https://github.com/ebednar)
+##### [Лев](https://github.com/foxers1)
