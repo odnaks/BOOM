@@ -6,6 +6,10 @@
 a subjective view within your universe. Without hardware acceleration and 3D library,
 must use the Ray-Casting method for this.
 
+- [How to install](#id-section1)
+- [and start](#id-section2)
+- [Map editor](#id-section3)
+
 ### Process of playing the game:
 ![game0](https://github.com/odnaks/-/blob/master/BOOM/game0.gif)
 
@@ -13,14 +17,14 @@ must use the Ray-Casting method for this.
 
 ![game0](https://github.com/odnaks/-/blob/master/BOOM/game2.gif)
 
-### how to install:
+### how to install: <div id='id-section1'/>
 ```shell
 make && make clean
 ```
 ## User interface:
 ![screen1](https://github.com/odnaks/-/blob/master/BOOM/ezgif-1-6f83a86bfe4d.gif)
 
-### how to start:
+### how to start: <div id='id-section2'/>
 ```shell
 ./doom-nukem
 
@@ -35,6 +39,6 @@ or
 ![head2](https://github.com/odnaks/-/blob/master/BOOM/head_2.gif)
 ![head3](https://github.com/odnaks/-/blob/master/BOOM/head_3.gif)
 
-## Map editor:
+## Map editor: <div id='id-section3'/>
 ![edit](https://github.com/odnaks/-/blob/master/BOOM/ru.png) 
 ![edit](https://github.com/odnaks/-/blob/master/BOOM/edit.gif)
