@@ -50,6 +50,6 @@ ESC - menu
 ![head3](https://github.com/odnaks/-/blob/master/BOOM/head_3.gif)
 
 ## Map editor: <div id='id-section4'/>
-#####You must be create your own map
+#### You must be create your own map
 ![edit](https://github.com/odnaks/-/blob/master/BOOM/edit.gif)
 ![edit](https://github.com/odnaks/-/blob/master/BOOM/ru.png) 
