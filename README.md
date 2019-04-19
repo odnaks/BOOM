@@ -29,7 +29,6 @@ or
 ./doom-nukem map (for map when create with using map editor)
 ```
 
-
 ## Game bar:
 
 ![head1](https://github.com/odnaks/-/blob/master/BOOM/head_1.gif)
@@ -37,5 +36,5 @@ or
 ![head3](https://github.com/odnaks/-/blob/master/BOOM/head_3.gif)
 
 ## Map editor:
-![edit](https://github.com/odnaks/-/blob/master/BOOM/rules.png) 
+![edit](https://github.com/odnaks/-/blob/master/BOOM/ru.png) 
 ![edit](https://github.com/odnaks/-/blob/master/BOOM/edit.gif)
