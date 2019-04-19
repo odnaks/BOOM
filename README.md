@@ -34,7 +34,7 @@ or
 ## User interface:
 ![screen1](https://github.com/odnaks/-/blob/master/BOOM/ezgif-1-6f83a86bfe4d.gif)
 
-## Game control: <div id='id-section4'/>
+## Game control: <div id='id-section3'/>
 ```shell
 AWSD - player motion
 space - jump
