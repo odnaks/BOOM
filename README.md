@@ -1,15 +1,16 @@
 # BOOM
-#### 3D game like DOOM and Doom Nukem
 
+> ### *Desctiption*
 
-"Realistic" 3D graphic representation that have from
-a subjective view within your universe. Without hardware acceleration and 3D library,
-must use the Ray-Casting method for this.
+>***This project is final project in first graphic branch of School 21 (Ecole 42). There we made a game engine, similar with  Doom and Duke Nukem 3d. This is much harder to understand and to code also engine than Wolf3d. We have manage with walls 
+ set in gamespace with float numbers, which makes it render, collision and texturing really fun (not really fun when facing  it first time). When the render was ready, the real fun started: gameplay, animations, enemies, level design, sounds, HUD, inventory and other stuff. It was easy to add, but put the perception of game to next level. In current state, the game is  not very interesting to play, but shows all the engine features. To make a real game of that, one must only expand current   resources.***
+
 
 - [How to install ](#id-section1)
  [ and start](#id-section2)
 - [Game control](#id-section3)
 - [Map editor](#id-section4)
+- [Authors](#id-section5)
 
 ### Process of playing the game:
 ![game0](https://github.com/odnaks/-/blob/master/BOOM/game0.gif)
@@ -49,11 +50,16 @@ ESC - menu
 ![head3](https://github.com/odnaks/-/blob/master/BOOM/head_3.gif)
 
 ## Map editor: <div id='id-section4'/>
+
+```shell
+./map_editor/map_editor
+```
+
 #### You must be create your own map
 ![edit](https://github.com/odnaks/-/blob/master/BOOM/edit.gif)
 ![edit](https://github.com/odnaks/-/blob/master/BOOM/ru.png)
 
-## Authors:
+## Authors: <div id='id-section5'/>
 ##### ME
 ##### [Вася](https://github.com/Twitting)
 ##### [Карим](https://github.com/ebednar)
