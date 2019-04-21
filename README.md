@@ -1,7 +1,5 @@
 # BOOM
 
-> ### *Desctiption*
-
 >***This project is final project in first graphic branch of School 21 (Ecole 42). There we made a game engine, similar with  Doom and Duke Nukem 3d. This is much harder to understand and to code also engine than Wolf3d. We have manage with walls 
  set in gamespace with float numbers, which makes it render, collision and texturing really fun (not really fun when facing  it first time). When the render was ready, the real fun started: gameplay, animations, enemies, level design, sounds, HUD, inventory and other stuff. It was easy to add, but put the perception of game to next level. In current state, the game is  not very interesting to play, but shows all the engine features. To make a real game of that, one must only expand current   resources.***
 
