@@ -55,7 +55,6 @@ ESC - menu
 
 #### You must be create your own map
 ![edit](https://github.com/odnaks/-/blob/master/BOOM/edit.gif)
-![edit](https://github.com/odnaks/-/blob/master/BOOM/ru.png)
 
 ## Authors: <div id='id-section5'/>
 ##### ME
